@@ -1,0 +1,58 @@
+package dev.cosrnic.minestomplacementrules;
+
+import dev.cosrnic.minestomplacementrules.rules.StairsRule;
+import net.minestom.server.MinecraftServer;
+import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.GameMode;
+import net.minestom.server.entity.Player;
+import net.minestom.server.event.GlobalEventHandler;
+import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
+import net.minestom.server.extras.MojangAuth;
+import net.minestom.server.instance.InstanceContainer;
+import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.BlockManager;
+import net.minestom.server.utils.NamespaceID;
+import net.minestom.server.world.DimensionType;
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        MinecraftServer server = MinecraftServer.init();
+
+        DimensionType FULLBRIGHT = DimensionType.builder(NamespaceID.from("placement:fullbright")).ambientLight(2f).build();
+
+        MinecraftServer.getDimensionTypeManager().addDimension(FULLBRIGHT);
+
+        InstanceContainer instanceContainer = MinecraftServer.getInstanceManager().createInstanceContainer(FULLBRIGHT);
+        instanceContainer.setGenerator(unit -> {
+            unit.modifier().fillHeight(-64, -1, Block.SNOW_BLOCK);
+        });
+
+        {
+            GlobalEventHandler eventHandler = MinecraftServer.getGlobalEventHandler();
+            eventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
+                Player player = event.getPlayer();
+
+                event.setSpawningInstance(instanceContainer);
+                player.setRespawnPoint(new Pos(0, 0, 0));
+                player.setGameMode(GameMode.CREATIVE);
+            });
+        }
+
+        {
+            BlockManager blockManager = MinecraftServer.getBlockManager();
+
+            Block.values().forEach(block -> {
+                if (block.name().endsWith("_stairs")) {
+                    blockManager.registerBlockPlacementRule(new StairsRule(block));
+                }
+            });
+        }
+
+        MojangAuth.init();
+
+        server.start("localhost", 25565);
+    }
+
+}
