@@ -1,13 +1,10 @@
-package dev.cosrnic.minestomplacementrules.utils;
+package dev.cosrnic.minestomplacementrules.rules.utils;
 
-import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.utils.Direction;
 
-import java.util.List;
-
-public class RuleUtils {
+public class States {
 
     public static final String HALF = "half";
     public static final String FACING = "facing";
@@ -19,13 +16,6 @@ public class RuleUtils {
     public static final String SOUTH = "south";
     public static final String WEST = "west";
 
-    private static final List<String> INTERACTION_BLOCK_NAMES = List.of(
-            "_button", // does a check for endsWith or if this list contains the block name
-            "minecraft:anvil",
-            "_anvil"
-
-    );
-
     public static BlockFace getHalf(Block block) {
         if (block.getProperty(HALF) == null) return BlockFace.BOTTOM;
         return BlockFace.valueOf(block.getProperty(HALF).toUpperCase());
@@ -36,6 +26,15 @@ public class RuleUtils {
         return BlockFace.valueOf(block.getProperty(FACING).toUpperCase());
     }
 
+    public static Direction getDirection(Block block) {
+        if (block.getProperty(FACE) == null) return Direction.NORTH;
+        return switch (block.getProperty(FACE)) {
+            case "ceiling" -> Direction.DOWN;
+            case "floor" -> Direction.UP;
+            default -> getFacing(block).toDirection();
+        };
+    }
+
     public static Direction rotateYCounterclockwise(Direction direction) {
         return switch (direction.ordinal()) {
             case 2 -> Direction.WEST;
@@ -43,30 +42,6 @@ public class RuleUtils {
             case 3 -> Direction.EAST;
             case 4 -> Direction.SOUTH;
             default -> throw new IllegalStateException("Unable to rotate " + direction);
-        };
-    }
-
-    public static boolean canPlaceAt(Block.Getter instance, Point blockPos, Direction direction, boolean shifting) {
-        Block offset = instance.getBlock(blockPos.add(direction.normalX(), direction.normalY(), direction.normalZ()));
-
-        if (((INTERACTION_BLOCK_NAMES.contains(offset.name())
-            ||
-            INTERACTION_BLOCK_NAMES.stream()
-                    .filter(s -> offset.name().endsWith(s))
-                    .findFirst()
-                    .orElse(null)
-                != null)
-            && !shifting
-        )) return false;
-        return offset.registry().collisionShape().isFaceFull(BlockFace.fromDirection(direction).getOppositeFace());
-    }
-
-    public static Direction getDirection(Block block) {
-        if (block.getProperty(RuleUtils.FACE) == null) return Direction.NORTH;
-        return switch (block.getProperty(RuleUtils.FACE)) {
-            case "ceiling" -> Direction.DOWN;
-            case "floor" -> Direction.UP;
-            default -> RuleUtils.getFacing(block).toDirection();
         };
     }
 
@@ -83,4 +58,5 @@ public class RuleUtils {
         Y,
         Z
     }
+
 }

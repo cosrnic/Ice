@@ -1,6 +1,7 @@
 package dev.cosrnic.minestomplacementrules.rules;
 
-import dev.cosrnic.minestomplacementrules.utils.RuleUtils;
+import dev.cosrnic.minestomplacementrules.rules.utils.GenericBlockPlacementRule;
+import dev.cosrnic.minestomplacementrules.rules.utils.States;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.gamedata.tags.Tag;
@@ -8,13 +9,12 @@ import net.minestom.server.gamedata.tags.TagManager;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
-import net.minestom.server.utils.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class FenceRule extends BlockPlacementRule {
+public class FenceRule extends GenericBlockPlacementRule {
     public FenceRule(@NotNull Block block) {
         super(block);
     }
@@ -29,10 +29,10 @@ public class FenceRule extends BlockPlacementRule {
         Point west = placePos.relative(BlockFace.WEST);
 
         return updateState.currentBlock().withProperties(Map.of(
-                RuleUtils.NORTH, String.valueOf(canConnect(instance, north, BlockFace.SOUTH)),
-                RuleUtils.EAST, String.valueOf(canConnect(instance, east, BlockFace.WEST)),
-                RuleUtils.SOUTH, String.valueOf(canConnect(instance, south, BlockFace.NORTH)),
-                RuleUtils.WEST, String.valueOf(canConnect(instance, west, BlockFace.EAST))
+                States.NORTH, String.valueOf(canConnect(instance, north, BlockFace.SOUTH)),
+                States.EAST, String.valueOf(canConnect(instance, east, BlockFace.WEST)),
+                States.SOUTH, String.valueOf(canConnect(instance, south, BlockFace.NORTH)),
+                States.WEST, String.valueOf(canConnect(instance, west, BlockFace.EAST))
         ));
     }
 
@@ -47,17 +47,17 @@ public class FenceRule extends BlockPlacementRule {
 
 
         return placementState.block().withProperties(Map.of(
-                RuleUtils.NORTH, String.valueOf(canConnect(instance, north, BlockFace.SOUTH)),
-                RuleUtils.EAST, String.valueOf(canConnect(instance, east, BlockFace.WEST)),
-                RuleUtils.SOUTH, String.valueOf(canConnect(instance, south, BlockFace.NORTH)),
-                RuleUtils.WEST, String.valueOf(canConnect(instance, west, BlockFace.EAST))
+                States.NORTH, String.valueOf(canConnect(instance, north, BlockFace.SOUTH)),
+                States.EAST, String.valueOf(canConnect(instance, east, BlockFace.WEST)),
+                States.SOUTH, String.valueOf(canConnect(instance, south, BlockFace.NORTH)),
+                States.WEST, String.valueOf(canConnect(instance, west, BlockFace.EAST))
         ));
     }
 
     private boolean canConnect(Block.Getter instance, Point pos, BlockFace blockFace) {
         Block instanceBlock = instance.getBlock(pos);
         boolean canConnectToFence = canConnectToFence(instanceBlock);
-        boolean canFenceGateConnect = instanceBlock.name().endsWith("_fence_gate") && RuleUtils.getAxis(RuleUtils.getFacing(instanceBlock).toDirection()).equals(RuleUtils.getAxis(blockFace.toDirection()));
+        boolean canFenceGateConnect = instanceBlock.name().endsWith("_fence_gate") && States.getAxis(States.getFacing(instanceBlock).toDirection()).equals(States.getAxis(blockFace.toDirection()));
         boolean isFaceFull = instanceBlock.registry().collisionShape().isFaceFull(blockFace);
 
 
@@ -66,8 +66,6 @@ public class FenceRule extends BlockPlacementRule {
 
     private boolean canConnectToFence(Block block) {
         TagManager tagManager = MinecraftServer.getTagManager();
-        System.out.println(tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:fences").getValues());
-        System.out.println(tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:wooden_fences").getValues());
         return tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:fences").contains(block.namespace()) && tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:wooden_fences").contains(block.namespace());
     }
 

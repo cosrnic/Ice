@@ -1,5 +1,7 @@
 package dev.cosrnic.minestomplacementrules.rules;
 
+import dev.cosrnic.minestomplacementrules.rules.utils.GenericBlockPlacementRule;
+import dev.cosrnic.minestomplacementrules.rules.utils.States;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -13,9 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
-import static dev.cosrnic.minestomplacementrules.utils.RuleUtils.*;
-
-public class StairsRule extends BlockPlacementRule {
+public class StairsRule extends GenericBlockPlacementRule {
 
     public StairsRule(@NotNull Block block) {
         super(block);
@@ -23,7 +23,7 @@ public class StairsRule extends BlockPlacementRule {
 
     @Override
     public @NotNull Block blockUpdate(@NotNull BlockPlacementRule.UpdateState updateState) {
-        return updateState.currentBlock().withProperty(SHAPE, getShape(updateState.instance(), updateState.currentBlock(), updateState.blockPosition()));
+        return updateState.currentBlock().withProperty(States.SHAPE, getShape(updateState.instance(), updateState.currentBlock(), updateState.blockPosition()));
     }
 
     @Override
@@ -43,32 +43,32 @@ public class StairsRule extends BlockPlacementRule {
         BlockFace facing = BlockFace.fromYaw(playerPos.yaw());
 
         Block block = this.block.withProperties(Map.of(
-            HALF, half.name().toLowerCase(),
-            FACING, facing.name().toLowerCase()
+            States.HALF, half.name().toLowerCase(),
+            States.FACING, facing.name().toLowerCase()
         ));
 
-        block = block.withProperty(SHAPE, getShape(placementState.instance(), block, placementPos));
+        block = block.withProperty(States.SHAPE, getShape(placementState.instance(), block, placementPos));
 
         return canPlaceAt(placementState.instance(), placementPos, placementFace.toDirection().opposite(), placementState.isPlayerShifting()) ? block : null;
 
     }
 
     private String getShape(Block.Getter instance, Block block, Point blockPos) {
-        Direction direction = getFacing(block).toDirection();
+        Direction direction = States.getFacing(block).toDirection();
         Block offsetBlock = instance.getBlock(blockPos.add(direction.normalX(), direction.normalY(), direction.normalZ()));
-        Direction offsetDirection = getFacing(offsetBlock).toDirection();
+        Direction offsetDirection = States.getFacing(offsetBlock).toDirection();
         Block oppositeOffsetBlock = instance.getBlock(blockPos.add(direction.opposite().normalX(), direction.opposite().normalY(), direction.opposite().normalZ()));
-        Direction oppositeOffsetDirection = getFacing(oppositeOffsetBlock).toDirection();
+        Direction oppositeOffsetDirection = States.getFacing(oppositeOffsetBlock).toDirection();
 
         if (isStairs(offsetBlock)
             &&
-            getHalf(block) == getHalf(offsetBlock)
+            States.getHalf(block) == States.getHalf(offsetBlock)
             &&
-            getAxis(offsetDirection) != getAxis(direction)
+            States.getAxis(offsetDirection) != States.getAxis(direction)
             &&
             isDifferentOrientation(instance, block, blockPos, offsetDirection.opposite())
         ) {
-            if (offsetDirection == rotateYCounterclockwise(direction)) {
+            if (offsetDirection == States.rotateYCounterclockwise(direction)) {
                 return "outer_left";
             } else {
                 return "outer_right";
@@ -77,13 +77,13 @@ public class StairsRule extends BlockPlacementRule {
 
         if (isStairs(oppositeOffsetBlock)
             &&
-            getHalf(block) == getHalf(oppositeOffsetBlock)
+            States.getHalf(block) == States.getHalf(oppositeOffsetBlock)
             &&
-            getAxis(oppositeOffsetDirection) != getAxis(direction)
+            States.getAxis(oppositeOffsetDirection) != States.getAxis(direction)
             &&
             isDifferentOrientation(instance, block, blockPos, oppositeOffsetDirection)
         ) {
-            if (oppositeOffsetDirection == rotateYCounterclockwise(direction)) {
+            if (oppositeOffsetDirection == States.rotateYCounterclockwise(direction)) {
                 return "inner_left";
             } else {
                 return "inner_right";
@@ -94,11 +94,11 @@ public class StairsRule extends BlockPlacementRule {
     }
 
     private boolean isDifferentOrientation(Block.Getter instance, Block block, Point blockPos, Direction direction) {
-        BlockFace facing = getFacing(block);
-        BlockFace half = getHalf(block);
+        BlockFace facing = States.getFacing(block);
+        BlockFace half = States.getHalf(block);
         Block instanceBlock = instance.getBlock(blockPos.add(direction.normalX(), direction.normalY(), direction.normalZ()));
-        BlockFace instanceBlockFacing = getFacing(instanceBlock);
-        BlockFace instanceBlockHalf = getHalf(instanceBlock);
+        BlockFace instanceBlockFacing = States.getFacing(instanceBlock);
+        BlockFace instanceBlockHalf = States.getHalf(instanceBlock);
 
         return !isStairs(instanceBlock) || instanceBlockFacing != facing || instanceBlockHalf != half;
     }
