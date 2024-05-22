@@ -44,6 +44,15 @@ public class States {
             default -> throw new IllegalStateException("Unable to rotate " + direction);
         };
     }
+    public static Direction rotateYClockwise(Direction direction) {
+        return switch (direction.ordinal()) {
+            case 2 -> Direction.EAST;
+            case 5 -> Direction.SOUTH;
+            case 3 -> Direction.WEST;
+            case 4 -> Direction.NORTH;
+            default -> throw new IllegalStateException("Unable to rotate " + direction);
+        };
+    }
 
     public static Axis getAxis(Direction direction) {
         return switch (direction) {

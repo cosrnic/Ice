@@ -57,7 +57,7 @@ public class FenceRule extends GenericBlockPlacementRule {
     private boolean canConnect(Block.Getter instance, Point pos, BlockFace blockFace) {
         Block instanceBlock = instance.getBlock(pos);
         boolean canConnectToFence = canConnectToFence(instanceBlock);
-        boolean canFenceGateConnect = instanceBlock.name().endsWith("_fence_gate") && States.getAxis(States.getFacing(instanceBlock).toDirection()).equals(States.getAxis(blockFace.toDirection()));
+        boolean canFenceGateConnect = instanceBlock.name().endsWith("_fence_gate") && States.getAxis(States.getFacing(instanceBlock).toDirection()).equals(States.getAxis(States.rotateYClockwise(blockFace.toDirection())));
         boolean isFaceFull = instanceBlock.registry().collisionShape().isFaceFull(blockFace);
 
 
