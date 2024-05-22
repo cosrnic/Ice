@@ -1,6 +1,9 @@
 package dev.cosrnic.minestomplacementrules;
 
+import dev.cosrnic.minestomplacementrules.rules.AnvilRule;
+import dev.cosrnic.minestomplacementrules.rules.FenceRule;
 import dev.cosrnic.minestomplacementrules.rules.StairsRule;
+import dev.cosrnic.minestomplacementrules.rules.WallMountedRule;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -14,19 +17,17 @@ import net.minestom.server.instance.block.BlockManager;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.world.DimensionType;
 
-
 public class Main {
 
     public static void main(String[] args) {
         MinecraftServer server = MinecraftServer.init();
 
         DimensionType FULLBRIGHT = DimensionType.builder(NamespaceID.from("placement:fullbright")).ambientLight(2f).build();
-
         MinecraftServer.getDimensionTypeManager().addDimension(FULLBRIGHT);
 
         InstanceContainer instanceContainer = MinecraftServer.getInstanceManager().createInstanceContainer(FULLBRIGHT);
         instanceContainer.setGenerator(unit -> {
-            unit.modifier().fillHeight(-64, -1, Block.SNOW_BLOCK);
+            unit.modifier().fillHeight(-64, 0, Block.GRASS_BLOCK);
         });
 
         {
@@ -35,7 +36,7 @@ public class Main {
                 Player player = event.getPlayer();
 
                 event.setSpawningInstance(instanceContainer);
-                player.setRespawnPoint(new Pos(0, 0, 0));
+                player.setRespawnPoint(new Pos(0, 1, 0));
                 player.setGameMode(GameMode.CREATIVE);
             });
         }
@@ -46,6 +47,12 @@ public class Main {
             Block.values().forEach(block -> {
                 if (block.name().endsWith("_stairs")) {
                     blockManager.registerBlockPlacementRule(new StairsRule(block));
+                } else if (block.name().equals("minecraft:anvil") || block.name().endsWith("_anvil")) {
+                    blockManager.registerBlockPlacementRule(new AnvilRule(block));
+                } else if (block.name().endsWith("_button")) { // todo: other wall mounted blocks
+                    blockManager.registerBlockPlacementRule(new WallMountedRule(block));
+                } else if (block.name().endsWith("_fence")) {
+                    blockManager.registerBlockPlacementRule(new FenceRule(block));
                 }
             });
         }

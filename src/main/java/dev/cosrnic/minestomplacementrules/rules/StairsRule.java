@@ -13,15 +13,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
-import static dev.cosrnic.minestomplacementrules.rules.utils.RuleUtils.*;
+import static dev.cosrnic.minestomplacementrules.utils.RuleUtils.*;
 
 public class StairsRule extends BlockPlacementRule {
 
-    private final Block block;
-
     public StairsRule(@NotNull Block block) {
         super(block);
-        this.block = block;
     }
 
     @Override
@@ -50,7 +47,9 @@ public class StairsRule extends BlockPlacementRule {
             FACING, facing.name().toLowerCase()
         ));
 
-        return block.withProperty(SHAPE, getShape(placementState.instance(), block, placementPos));
+        block = block.withProperty(SHAPE, getShape(placementState.instance(), block, placementPos));
+
+        return canPlaceAt(placementState.instance(), placementPos, placementFace.toDirection().opposite(), placementState.isPlayerShifting()) ? block : null;
 
     }
 
