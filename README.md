@@ -9,4 +9,4 @@ You can easily customise the rules by just modifying the code.
 Want to be able to place buttons on fences? just modify the `canPlaceAt` method in [GenericBlockPlacementRule](https://github.com/cosrnic/Ice/tree/master/src/main/java/dev/cosrnic/ice/rules/utils/GenericBlockPlacementRule.java) or override it in [ButtonRule](https://github.com/cosrnic/Ice/blob/master/src/main/java/dev/cosrnic/ice/rules/ButtonRule.java)!
 
 ## Disclaimer
-This may not be 100% accurate, if you want to improve the accuracy feel free to [fork](https://github.com/cosrnic/Ice/fork) and make a [pull request](https://github.com/cosrnic/ice/pulls). The rules are based off of vanilla's placement rules.
+These rules may not be 100% accurate, if you want to improve the accuracy feel free to [fork](https://github.com/cosrnic/Ice/fork) and make a [pull request](https://github.com/cosrnic/ice/pulls). The rules are based off of vanilla's and aim to be as accurate as possible.
