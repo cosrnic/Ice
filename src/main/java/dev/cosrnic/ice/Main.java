@@ -1,9 +1,9 @@
-package dev.cosrnic.minestomplacementrules;
+package dev.cosrnic.ice;
 
-import dev.cosrnic.minestomplacementrules.rules.AnvilRule;
-import dev.cosrnic.minestomplacementrules.rules.ButtonRule;
-import dev.cosrnic.minestomplacementrules.rules.FenceRule;
-import dev.cosrnic.minestomplacementrules.rules.StairsRule;
+import dev.cosrnic.ice.rules.AnvilRule;
+import dev.cosrnic.ice.rules.ButtonRule;
+import dev.cosrnic.ice.rules.FenceRule;
+import dev.cosrnic.ice.rules.StairsRule;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;

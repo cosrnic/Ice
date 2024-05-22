@@ -1,7 +1,7 @@
-package dev.cosrnic.minestomplacementrules.rules;
+package dev.cosrnic.ice.rules;
 
-import dev.cosrnic.minestomplacementrules.rules.utils.GenericBlockPlacementRule;
-import dev.cosrnic.minestomplacementrules.rules.utils.States;
+import dev.cosrnic.ice.rules.utils.GenericBlockPlacementRule;
+import dev.cosrnic.ice.rules.utils.States;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.gamedata.tags.Tag;

@@ -1,4 +1,4 @@
-package dev.cosrnic.minestomplacementrules.rules.utils;
+package dev.cosrnic.ice.rules.utils;
 
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
