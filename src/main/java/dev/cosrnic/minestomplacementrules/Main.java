@@ -1,9 +1,9 @@
 package dev.cosrnic.minestomplacementrules;
 
 import dev.cosrnic.minestomplacementrules.rules.AnvilRule;
+import dev.cosrnic.minestomplacementrules.rules.ButtonRule;
 import dev.cosrnic.minestomplacementrules.rules.FenceRule;
 import dev.cosrnic.minestomplacementrules.rules.StairsRule;
-import dev.cosrnic.minestomplacementrules.rules.WallMountedRule;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -49,8 +49,8 @@ public class Main {
                     blockManager.registerBlockPlacementRule(new StairsRule(block));
                 } else if (block.name().equals("minecraft:anvil") || block.name().endsWith("_anvil")) {
                     blockManager.registerBlockPlacementRule(new AnvilRule(block));
-                } else if (block.name().endsWith("_button")) { // todo: other wall mounted blocks
-                    blockManager.registerBlockPlacementRule(new WallMountedRule(block));
+                } else if (block.name().endsWith("_button")) {
+                    blockManager.registerBlockPlacementRule(new ButtonRule(block));
                 } else if (block.name().endsWith("_fence")) {
                     blockManager.registerBlockPlacementRule(new FenceRule(block));
                 }

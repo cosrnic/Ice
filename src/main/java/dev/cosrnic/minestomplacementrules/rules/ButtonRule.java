@@ -13,9 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
-public class WallMountedRule extends GenericBlockPlacementRule {
+public class ButtonRule extends GenericBlockPlacementRule {
 
-    public WallMountedRule(@NotNull Block block) {
+    public ButtonRule(@NotNull Block block) {
         super(block);
     }
 
