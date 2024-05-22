@@ -38,6 +38,7 @@ public class Main {
                 event.setSpawningInstance(instanceContainer);
                 player.setRespawnPoint(new Pos(0, 1, 0));
                 player.setGameMode(GameMode.CREATIVE);
+                player.setPermissionLevel(4);
             });
         }
 
