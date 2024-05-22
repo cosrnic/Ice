@@ -27,7 +27,7 @@ public class Main {
 
         InstanceContainer instanceContainer = MinecraftServer.getInstanceManager().createInstanceContainer(FULLBRIGHT);
         instanceContainer.setGenerator(unit -> {
-            unit.modifier().fillHeight(-64, 0, Block.GRASS_BLOCK);
+            unit.modifier().fillHeight(-64, 0, Block.SNOW_BLOCK);
         });
 
         {
