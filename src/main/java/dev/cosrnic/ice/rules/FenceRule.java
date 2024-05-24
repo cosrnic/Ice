@@ -56,17 +56,22 @@ public class FenceRule extends GenericBlockPlacementRule {
 
     private boolean canConnect(Block.Getter instance, Point pos, BlockFace blockFace) {
         Block instanceBlock = instance.getBlock(pos);
+        boolean isBlockNetherBrickFence = block.name().endsWith("_brick_fence");
+        boolean isInstanceBlockNetherBrickFence = instanceBlock.name().endsWith("_brick_fence");
         boolean canConnectToFence = canConnectToFence(instanceBlock);
         boolean canFenceGateConnect = instanceBlock.name().endsWith("_fence_gate") && States.getAxis(States.getFacing(instanceBlock).toDirection()).equals(States.getAxis(States.rotateYClockwise(blockFace.toDirection())));
         boolean isFaceFull = instanceBlock.registry().collisionShape().isFaceFull(blockFace);
 
 
-        return !cannotConnect(instanceBlock) && isFaceFull || canConnectToFence || canFenceGateConnect;
+        return !cannotConnect(instanceBlock) && isFaceFull || (canConnectToFence && !isBlockNetherBrickFence) || canFenceGateConnect || (isBlockNetherBrickFence && isInstanceBlockNetherBrickFence);
     }
 
     private boolean canConnectToFence(Block block) {
         TagManager tagManager = MinecraftServer.getTagManager();
-        return tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:fences").contains(block.namespace()) && tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:wooden_fences").contains(block.namespace());
+        boolean isFence = tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:fences").contains(block.namespace());
+        boolean isWoodenFence = tagManager.getTag(Tag.BasicType.BLOCKS, "minecraft:wooden_fences").contains(block.namespace());
+
+        return isFence && isWoodenFence;
     }
 
     private boolean cannotConnect(Block block) {
