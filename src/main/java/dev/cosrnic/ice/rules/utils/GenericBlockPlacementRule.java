@@ -17,8 +17,8 @@ public abstract class GenericBlockPlacementRule extends BlockPlacementRule {
     private final List<String> INTERACTION_BLOCK_NAMES = List.of(
             "_button", // does a check for endsWith or if this list contains the block name
             "minecraft:anvil",
-            "_anvil"
-
+            "_anvil",
+            "_trapdoor"
     );
 
     protected boolean canPlaceAt(Block.Getter instance, Point blockPos, Direction direction, boolean shifting) {

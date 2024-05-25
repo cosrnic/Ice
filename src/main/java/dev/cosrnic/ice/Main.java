@@ -1,9 +1,6 @@
 package dev.cosrnic.ice;
 
-import dev.cosrnic.ice.rules.AnvilRule;
-import dev.cosrnic.ice.rules.ButtonRule;
-import dev.cosrnic.ice.rules.FenceRule;
-import dev.cosrnic.ice.rules.StairsRule;
+import dev.cosrnic.ice.rules.*;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -54,6 +51,8 @@ public class Main {
                     blockManager.registerBlockPlacementRule(new ButtonRule(block));
                 } else if (block.name().endsWith("_fence")) {
                     blockManager.registerBlockPlacementRule(new FenceRule(block));
+                } else if (block.name().endsWith("_trapdoor")) {
+                    blockManager.registerBlockPlacementRule(new TrapdoorRule(block));
                 }
             });
         }
